@@ -12,16 +12,6 @@ path2 {
     stroke-width: 2;
     fill: none;
 }
-path3 { 
-    stroke: steelblue;
-    stroke-width: 2;
-    fill: none;
-}
-path4 { 
-    stroke: steelblue;
-    stroke-width: 2;
-    fill: none;
-}
 .axis path,
 .axis line {
     fill: none;
@@ -76,7 +66,6 @@ var svg = d3.select("body")
 // Get the data
 d3.csv("FinalDataSet.csv", function(error, data) {
     data.forEach(function(d) {
-        console.log("d", d);
         d.year = d.year;
         d.wageGapWomen = d.wageGapWomen;
         d.fullTimeWomen = d.fullTimeWomen;
@@ -90,6 +79,7 @@ d3.csv("FinalDataSet.csv", function(error, data) {
     svg.append("path1")
         .attr("class", "line")
         .attr("d", valueline1(data));
+        console.log(valueline1(data));
     // Add the scatterplot
     svg.selectAll("dot")
         .data(data)
