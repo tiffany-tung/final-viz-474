@@ -52,12 +52,15 @@ var yAxis = d3.svg.axis().scale(y)
 var valueline1 = d3.svg.line()
     .x(function(d) { return x(d.year); })
     .y(function(d) { return y(d.wageGapWomen); });
+    
 var valueline2 = d3.svg.line()
     .x(function(d) { return x(d.year); })
     .y(function(d) { return y(d.wageGapMen); });
+    
 var valueline3 = d3.svg.line()
     .x(function(d) { return x(d.year); })
     .y(function(d) { return y(d.fullTimeWomen); });
+    
 var valueline4 = d3.svg.line()
     .x(function(d) { return x(d.year); })
     .y(function(d) { return y(d.fullTimeWomen); });
@@ -76,13 +79,13 @@ d3.csv("FinalDataSet.csv", function(error, data) {
         console.log("d", d);
         d.year = d.year;
         d.wageGapWomen = d.wageGapWomen;
-        d.wageGapMen = d.wageGapMen;
         d.fullTimeWomen = d.fullTimeWomen;
+        d.wageGapMen = d.wageGapMen;
         d.fullTimeMen = d.fullTimeMen;
     });
     // Scale the range of the data
     x.domain(d3.extent(data, function(d) { return d.year; }));
-    y.domain([0, d3.max(data, function(d) { return d.wageGap; })]);
+    y.domain([0, d3.max(data, function(d) { return d.wageGapMen; })]);
     // Add the valueline path.
     svg.append("path1")
         .attr("class", "line")
