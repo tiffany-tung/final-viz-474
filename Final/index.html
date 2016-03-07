@@ -79,7 +79,7 @@ d3.csv("FinalDataSet.csv", function(error, data) {
     svg.append("path1")
         .attr("class", "line")
         .attr("d", valueline1(data));
-        console.log(valueline1(data));
+        console.log(data);
     // Add the scatterplot
     svg.selectAll("dot")
         .data(data)
