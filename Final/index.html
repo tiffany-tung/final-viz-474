@@ -51,7 +51,8 @@ var svg = d3.select("body")
 d3.csv("FinalDataSet.csv", function(error, data) {
     data.forEach(function(d) {
         console.log(d);
-        console.log(d.year);
+        console.log(d.Year);
+        console.log(d.Gender);
         d.year = d.Year;
         d.gender = d.Gender;
     });
