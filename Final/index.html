@@ -53,52 +53,12 @@ dispatch.on("load.menu", function(stateById) {
           return d.id; 
           })
       .text(function(d) { return d.id; });
-
+      
   dispatch.on("statechange.menu", function(state) {
     console.log(state)
     select.property("value", state.id);
   });
 });
-
-// // A bar chart to show total population; uses the "bar" namespace.
-// dispatch.on("load.bar", function(stateById) {
-//   var margin = {top: 20, right: 20, bottom: 30, left: 40},
-//       width = 80 - margin.left - margin.right,
-//       height = 460 - margin.top - margin.bottom;
-
-//   var y = d3.scale.linear()
-//       .domain([0, d3.max(stateById.values(), function(d) { return d.total; })])
-//       .rangeRound([height, 0])
-//       .nice();
-
-//   var yAxis = d3.svg.axis()
-//       .scale(y)
-//       .orient("left")
-//       .tickFormat(d3.format(".2s"));
-
-//   var svg = d3.select("body").append("svg")
-//       .attr("width", width + margin.left + margin.right)
-//       .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-//   svg.append("g")
-//       .attr("class", "y axis")
-//       .call(yAxis);
-
-//   var rect = svg.append("rect")
-//       .attr("x", 4)
-//       .attr("width", width - 4)
-//       .attr("y", height)
-//       .attr("height", 0)
-//       .style("fill", "#aaa");
-
-//   dispatch.on("statechange.bar", function(d) {
-//     rect.transition()
-//         .attr("y", y(d.total))
-//         .attr("height", y(0) - y(d.total));
-//   });
-// });
 
 // A pie chart to show population by age group; uses the "pie" namespace.
 dispatch.on("load.pie", function(stateById) {
