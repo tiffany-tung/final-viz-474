@@ -31,6 +31,7 @@ d3.csv("data.csv", type, function(error, states) {
   var stateById = d3.map();
   states.forEach(function(d) { stateById.set(d.id, d); });
   console.log(stateById.get("Google"))
+  console.log(stateById.keys())
   dispatch.load(stateById);
   dispatch.statechange(stateById.get("CA"));
 });
@@ -48,8 +49,8 @@ dispatch.on("load.menu", function(stateById) {
       .attr("value", function(d) { return d.id; })
       .text(function(d) { return d.id; });
 
-  dispatch.on("statechange.menu", function(stateById.id) {
-    select.property("value", id);
+  dispatch.on("statechange.menu", function(d) {
+    select.property("value", d.id);
   });
 });
 
