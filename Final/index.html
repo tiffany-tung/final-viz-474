@@ -26,13 +26,11 @@ var groups = [
 ];
 
 d3.csv("data.csv", type, function(error, states) {
+  console.log(states);
   if (error) throw error;
   var stateById = d3.map();
   states.forEach(function(d) { stateById.set(d.id, d); });
-  stateById.forEach(function(d) {
-      console.log(d)
-      console.log("id " + d.id)
-  })
+  console.log(stateById.get("Google"))
   dispatch.load(stateById);
   dispatch.statechange(stateById.get("CA"));
 });
@@ -50,10 +48,8 @@ dispatch.on("load.menu", function(stateById) {
       .attr("value", function(d) { return d.id; })
       .text(function(d) { return d.id; });
 
-  dispatch.on("statechange.menu", function(d) {
-    console.log("d")
-    console.log(d)
-    select.property("value", d.id);
+  dispatch.on("statechange.menu", function(state) {
+    select.property("value", state.id);
   });
 });
 
