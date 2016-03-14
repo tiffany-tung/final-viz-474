@@ -50,8 +50,10 @@ dispatch.on("load.menu", function(stateById) {
       .attr("value", function(d) { return d.id; })
       .text(function(d) { return d.id; });
 
-  dispatch.on("statechange.menu", function(state) {
-    select.property("value", state.id);
+  dispatch.on("statechange.menu", function(d) {
+    console.log("d")
+    console.log(d)
+    select.property("value", d.id);
   });
 });
 
