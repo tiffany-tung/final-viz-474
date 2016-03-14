@@ -15,6 +15,7 @@
 
 </style>
 <body>
+<script src="https://d3js.org/d3-dispatch.v0.4.min.js"></script>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
@@ -42,15 +43,19 @@ dispatch.on("load.menu", function(stateById) {
     .append("div")
     .append("select")
       .on("change", function() { dispatch.statechange(stateById.get(this.value)); });
-
+      
+      console.log(stateById.values());
   select.selectAll("option")
       .data(stateById.values())
     .enter().append("option")
-      .attr("value", function(d) { return d.id; })
+      .attr("value", function(d) { 
+          console.log(d.id)
+          return d.id; 
+          })
       .text(function(d) { return d.id; });
 
-  dispatch.on("statechange.menu", function(d) {
-    select.property("value", d.id);
+  dispatch.on("statechange.menu", function(state) {
+    select.property("value", state.id);
   });
 });
 
