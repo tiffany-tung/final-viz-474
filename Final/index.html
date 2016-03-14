@@ -26,110 +26,90 @@ path2 {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
-// Set the dimensions of the canvas / graph
-var margin = {top: 30, right: 20, bottom: 30, left: 50},
-    width = 600 - margin.left - margin.right,
-    height = 270 - margin.top - margin.bottom;
+var dispatch = d3.dispatch("load", "statechange");
 
-// Set the ranges
-var x = d3.scale.linear().range([0, width]);
-var y = d3.scale.linear().range([height, 0]);
-// Define the axes
-var xAxis = d3.svg.axis().scale(x)
-    .orient("bottom").ticks(5);
-var yAxis = d3.svg.axis().scale(y)
-    .orient("left").ticks(5);
-// Define the line
-var valueline1 = d3.svg.line()
-    .x(function(d) { return x(d.year); })
-    .y(function(d) { return y(d.wageGapWomen); });
-    
-var valueline2 = d3.svg.line()
-    .x(function(d) { return x(d.year); })
-    .y(function(d) { return y(d.wageGapMen); });
-    
-var valueline3 = d3.svg.line()
-    .x(function(d) { return x(d.year); })
-    .y(function(d) { return y(d.fullTimeWomen); });
-    
-var valueline4 = d3.svg.line()
-    .x(function(d) { return x(d.year); })
-    .y(function(d) { return y(d.fullTimeWomen); });
-    
-// Adds the svg canvas
-var svg = d3.select("body")
-    .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-        .attr("transform", 
-              "translate(" + margin.left + "," + margin.top + ")");
-// Get the data
-d3.csv("FinalDataSet.csv", function(error, data) {
-    data.forEach(function(d) {
-        d.year = d.year;
-        d.wageGapWomen = d.wageGapWomen;
-        d.fullTimeWomen = d.fullTimeWomen;
-        d.wageGapMen = d.wageGapMen;
-        d.fullTimeMen = d.fullTimeMen;
-    });
-    // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.year; }));
-    y.domain([0, d3.max(data, function(d) { return d.wageGapMen; })]);
-    // Add the valueline path.
-    svg.append("path1")
-        .attr("class", "line")
-        .attr("d", valueline1(data));
-        console.log(data);
-    // Add the scatterplot
-    svg.selectAll("dot")
-        .data(data)
-      .enter().append("circle")
-        .attr("r", 3)
-        .attr("cx", function(d) { return x(d.year); })
-        .attr("cy", function(d) { return y(d.wageGapWomen); });
-    // Add the valueline path.
-    svg.append("path2")
-        .attr("class", "line")
-        .attr("d", valueline2(data));
-    // Add the scatterplot
-    svg.selectAll("dot")
-        .data(data)
-      .enter().append("circle")
-        .attr("r", 3)
-        .attr("cx", function(d) { return x(d.year); })
-        .attr("cy", function(d) { return y(d.wageGapMen); });
-    // Add the valueline path.
-    svg.append("path3")
-        .attr("class", "line")
-        .attr("d", valueline3(data));
-    // Add the scatterplot
-    svg.selectAll("dot")
-        .data(data)
-      .enter().append("circle")
-        .attr("r", 3)
-        .attr("cx", function(d) { return x(d.year); })
-        .attr("cy", function(d) { return y(d.fullTimeWomen); });
-    // Add the valueline path.
-    svg.append("path4")
-        .attr("class", "line")
-        .attr("d", valueline4(data));
-    // Add the scatterplot
-    svg.selectAll("dot")
-        .data(data)
-      .enter().append("circle")
-        .attr("r", 3)
-        .attr("cx", function(d) { return x(d.year); })
-        .attr("cy", function(d) { return y(d.fullTimeMen); });
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-    // Add the Y Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
+var groups = [
+  "male",
+  "female"
+];
+
+var data = [
+  {id: "Google", male: 70, female: 30},
+  {id: "Cisco", male: 77, female: 23},
+  {id: "Intel", male: 76, female: 24},
+  {id: "Microsoft", male: 72, female: 28},
+  {id: "Apple", male: 70, female: 30},
+  {id: "Twitter", male: 70, female: 33},
+  {id: "Facebook", male: 69, female: 31},
+  {id: "HP", male: 67, female: 33},
+  {id: "Yahoo", male: 62, female: 38},
+  {id: "LinkedIn", male: 61, female: 39},
+  {id: "Pinterest", male: 60, female: 40},
+  {id: "eBay", male: 58, female: 42}
+]
+
+var companyData = d3.map();
+data.forEach(function(d) { companyData.set(d.id, d); });
+dispatch.load(companyData);
+dispatch.statechange(companyData.get("Google"));
+
+// A drop-down menu for selecting a state; uses the "menu" namespace.
+dispatch.on("load.menu", function(companyData) {
+  var select = d3.select("body")
+    .append("div")
+    .append("select")
+      .on("change", function() { dispatch.statechange(companyData.get(this.value)); });
+
+  select.selectAll("option")
+      .data(companyData.values())
+    .enter().append("option")
+      .attr("value", function(d) { return d.id; })
+      .text(function(d) { return d.id; });
+
+  dispatch.on("statechange.menu", function(state) {
+    select.property("value", state.id);
+  });
 });
+
+// A pie chart to show population by age group; uses the "pie" namespace.
+// dispatch.on("load.pie", function(stateById) {
+//   var width = 880,
+//       height = 460,
+//       radius = Math.min(width, height) / 2;
+
+//   var color = d3.scale.ordinal()
+//       .domain(groups)
+//       .range(["#98abc5", "#8a89a6"]);
+
+//   var arc = d3.svg.arc()
+//       .outerRadius(radius - 10)
+//       .innerRadius(radius - 70);
+
+//   var pie = d3.layout.pie()
+//       .sort(null);
+
+//   var svg = d3.select("body").append("svg")
+//       .attr("width", width)
+//       .attr("height", height)
+//     .append("g")
+//       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+//   var path = svg.selectAll("path")
+//       .data(groups)
+//     .enter().append("path")
+//       .style("fill", color)
+//       .each(function() { this._current = {startAngle: 0, endAngle: 0}; });
+
+//   dispatch.on("statechange.pie", function(d) {
+//     path.data(pie.value(function(g) { return d[g]; })(groups)).transition()
+//         .attrTween("d", function(d) {
+//           var interpolate = d3.interpolate(this._current, d);
+//           this._current = interpolate(0);
+//           return function(t) {
+//             return arc(interpolate(t));
+//           };
+//         });
+//   });
+// });
 </script>
 </body>
